@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SRIDA Event Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .srida-logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .srida-logo i {
+            color: #764ba2;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+            z-index: 1;
+        }
+        .divider span {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="card p-4">
+                    <div class="srida-logo">
+                        <i class="fas fa-ring"></i> SRIDA
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <h3>Welcome Back</h3>
+                        <p class="text-muted">Sign in to your account</p>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label"><i class="fas fa-envelope me-2"></i>Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label"><i class="fas fa-lock me-2"></i>Password</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <a href="forgot-password.html" class="text-decoration-none">Forgot Password?</a>
+                    </div>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <p class="mb-2">Don't have an account?</p>
+                        <a href="register.html" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </a>
+                    </div>
+
+                    <div class="text-center">
+                        <small class="text-muted">Back to <a href="index.html" class="text-decoration-none">Home</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API configuration
+        const API_BASE = 'http://localhost:5000/api';
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Store token in localStorage
+                    localStorage.setItem('srida_token', data.token);
+                    localStorage.setItem('srida_user', JSON.stringify(data.user));
+
+                    // Redirect based on user role
+                    if (data.user.role === 'seller') {
+                        window.location.href = 'seller-dashboard.html';
+                    } else {
+                        window.location.href = 'buyer-dashboard.html';
+                    }
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Network error. Please try again.');
+            }
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('srida_token');
+            const user = JSON.parse(localStorage.getItem('srida_user'));
+
+            if (token && user) {
+                // Redirect to dashboard based on role
+                if (user.role === 'seller') {
+                    window.location.href = 'seller-dashboard.html';
+                } else {
+                    window.location.href = 'buyer-dashboard.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

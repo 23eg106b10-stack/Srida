@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - SRIDA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .dashboard-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .status-badge { font-size: 0.8em; padding: 4px 8px; border-radius: 20px; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #d1ecf1; color: #0c5460; }
+        .status-in-progress { background: #cce5ff; color: #004085; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; }
+        .booking-card { transition: transform 0.2s; }
+        .booking-card:hover { transform: translateY(-2px); }
+        .filter-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">
+                <i class="fas fa-ring me-2"></i>SRIDA
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="buyer-dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Browse Services</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="my-bookings.html">My Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="messages.html">Messages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="wishlist.html">Wishlist</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-2"></i><span id="userName">John Doe</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold mb-1">My Bookings</h1>
+                <p class="text-muted mb-0">Manage your event reservations</p>
+            </div>
+            <div class="d-flex gap-2">
+                <select id="statusFilter" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadBookings()">
+                    <i class="fas fa-sync me-2"></i>Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-2">
+                                <h5 id="totalBookings">0</h5>
+                                <small class="text-muted">Total</small>
+                            </div>
+                            <div class="col-md-2">
+                                <h5 class="text-primary" id="confirmedBookings">0</h5>
+                                <small class="text-muted">Confirmed</small>
+                            </div>
+                            <div class="col-md-2">
+                                <h5 class="text-warning" id="inprogressBookings">0</h5>
+                                <small class="text-muted">In Progress</small>
+                            </div>
+                            <div class="col-md-2">
+                                <h5 class="text-success" id="completedBookings">0</h5>
+                                <small class="text-muted">Completed</small>
+                            </div>
+                            <div class="col-md-2">
+                                <h5 class="text-danger" id="cancelledBookings">0</h5>
+                                <small class="text-muted">Cancelled</small>
+                            </div>
+                            <div class="col-md-2">
+                                <h5 class="text-secondary" id="pendingBookings">0</h5>
+                                <small class="text-muted">Pending</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings List -->
+        <div class="row">
+            <div class="col-12">
+                <div id="bookingsContainer">
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+                        <h4>No Bookings Found</h4>
+                        <p class="text-muted">You haven't made any bookings yet.</p>
+                        <a href="services.html" class="btn btn-primary">Browse Services</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancellation Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cancel Booking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please provide a reason for cancellation:</p>
+                    <textarea id="cancelReason" class="form-control" rows="3" placeholder="Enter cancellation reason..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmCancel()">Cancel Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API configuration
+        const API_BASE = 'http://localhost:5000/api';
+        let currentUser = null;
+        let userToken = null;
+        let allBookings = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            userToken = localStorage.getItem('srida_token');
+            currentUser = JSON.parse(localStorage.getItem('srida_user'));
+
+            if (!userToken || !currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = currentUser.name;
+            loadBookings();
+
+            // Filter listener
+            document.getElementById('statusFilter').addEventListener('change', filterBookings);
+        });
+
+        // API calls with authentication
+        async function apiCall(endpoint, options = {}) {
+            const headers = {
+                'Authorization': `Bearer ${userToken}`,
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+            return fetch(`${API_BASE}${endpoint}`, { ...options, headers });
+        }
+
+        // Load bookings
+        async function loadBookings() {
+            try {
+                const response = await apiCall('/bookings/buyer');
+                const data = await response.json();
+
+                if (data.success) {
+                    allBookings = data.bookings;
+                    updateStats(allBookings);
+                    updateBookingsList(allBookings);
+                }
+            } catch (error) {
+                console.error('Bookings error:', error);
+                document.getElementById('bookingsContainer').innerHTML = '<div class="alert alert-danger">Error loading bookings. Please try again.</div>';
+            }
+        }
+
+        function updateStats(bookings) {
+            document.getElementById('totalBookings').textContent = bookings.length;
+            document.getElementById('confirmedBookings').textContent = bookings.filter(b => b.status === 'confirmed').length;
+            document.getElementById('inprogressBookings').textContent = bookings.filter(b => b.status === 'in-progress').length;
+            document.getElementById('completedBookings').textContent = bookings.filter(b => b.status === 'completed').length;
+            document.getElementById('cancelledBookings').textContent = bookings.filter(b => b.status === 'cancelled').length;
+            document.getElementById('pendingBookings').textContent = bookings.filter(b => b.status === 'pending').length;
+        }
+
+        function updateBookingsList(bookings) {
+            const container = document.getElementById('bookingsContainer');
+
+            if (bookings.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+                        <h4>No Bookings Found</h4>
+                        <p class="text-muted">You haven't made any bookings yet.</p>
+                        <a href="services.html" class="btn btn-primary">Browse Services</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = bookings.map(booking => {
+                const statusClass = `status-${booking.status}`;
+                const statusText = booking.status.charAt(0).toUpperCase() + booking.status.slice(1);
+                const eventDate = new Date(booking.eventDate).toLocaleDateString();
+                const eventTime = new Date(booking.eventDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                let actionButtons = '';
+                if (booking.status === 'pending' || booking.status === 'confirmed') {
+                    actionButtons = `<button class="btn btn-sm btn-outline-danger me-2" onclick="showCancelModal('${booking._id}')">Cancel</button>`;
+                }
+                actionButtons += `<button class="btn btn-sm btn-outline-primary" onclick="loadBookingDetails('${booking._id}')">View Details</button>`;
+
+                return `
+                    <div class="card booking-card dashboard-card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title">${booking.service.serviceName}</h5>
+                                    <p class="card-text mb-1"><strong>${booking.eventType}</strong></p>
+                                    <p class="card-text">
+                                        <i class="fas fa-calendar-alt me-2"></i>${eventDate}<br>
+                                        <i class="fas fa-clock me-2"></i>${eventTime}<br>
+                                        <i class="fas fa-map-marker-alt me-2"></i>${booking.venue.city || 'Venue TBD'}<br>
+                                        <i class="fas fa-users me-2"></i>${booking.numberOfGuests} guests
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <h6>Seller Details</h6>
+                                    <p class="mb-1"><strong>${booking.seller.businessName || booking.seller.name}</strong></p>
+                                    <p class="mb-1"><i class="fas fa-phone me-1"></i>${booking.seller.phone}</p>
+                                    <p class="mb-0"><i class="fas fa-envelope me-1"></i>${booking.seller.email}</p>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <h5 class="text-primary">₹${booking.totalAmount}</h5>
+                                    <span class="status-badge ${statusClass}">${statusText}</span>
+                                    <div class="mt-3">
+                                        ${actionButtons}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterBookings() {
+            const filterStatus = document.getElementById('statusFilter').value;
+            const filteredBookings = filterStatus
+                ? allBookings.filter(booking => booking.status === filterStatus)
+                : allBookings;
+            updateBookingsList(filteredBookings);
+        }
+
+        function loadBookingDetails(bookingId) {
+            // Redirect to booking details page (to be created)
+            window.location.href = `booking-details.html?id=${bookingId}`;
+        }
+
+        function showCancelModal(bookingId) {
+            currentBookingId = bookingId;
+            new bootstrap.Modal(document.getElementById('cancelModal')).show();
+        }
+
+        async function confirmCancel() {
+            const reason = document.getElementById('cancelReason').value;
+            if (!reason.trim()) {
+                alert('Please provide a cancellation reason.');
+                return;
+            }
+
+            try {
+                const response = await apiCall(`/bookings/${currentBookingId}/cancel`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ cancellationReason: reason })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('cancelModal')).hide();
+                    document.getElementById('cancelReason').value = '';
+                    loadBookings(); // Reload bookings
+                    alert('Booking cancelled successfully.');
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Error cancelling booking. Please try again.');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('srida_token');
+            localStorage.removeItem('srida_user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

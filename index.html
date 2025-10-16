@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRIDA - Smart Event Management Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .hero {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem 0;
+        }
+        .card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.95);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .category-icon {
+            font-size: 2rem;
+            color: #667eea;
+        }
+        .hero-title {
+            opacity: 0;
+        }
+        .hero-subtitle {
+            opacity: 0;
+        }
+        .hero-buttons {
+            opacity: 0;
+        }
+        .section-title {
+            opacity: 0;
+        }
+        .feature-icon {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent mb-5">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-2" href="#"><i class="fas fa-ring"></i> SRIDA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="register.html">Sign Up</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero py-5">
+        <div class="container text-center text-white">
+            <h1 class="display-4 fw-bold mb-4 hero-title">Smart Event Management Platform</h1>
+            <p class="lead fs-4 mb-5 hero-subtitle">One-stop platform for wedding and event planning services</p>
+            <div class="row justify-content-center hero-buttons">
+                <div class="col-md-3 mb-3">
+                    <a href="register.html" class="btn btn-primary btn-lg w-100"><i class="fas fa-user-tie"></i> Explore as Buyer</a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="register.html" class="btn btn-success btn-lg w-100"><i class="fas fa-store"></i> Join as Seller</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="py-5 features-section">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5 text-white section-title">Why Choose SRIDA?</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-map-marker-alt category-icon mb-3 feature-icon"></i>
+                            <h5 class="card-title feature-title">Location-Based Search</h5>
+                            <p class="card-text feature-text">Find services near you or search by city</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-check category-icon mb-3 feature-icon"></i>
+                            <h5 class="card-title feature-title">Easy Booking</h5>
+                            <p class="card-text feature-text">Book confirmed services with real-time updates</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-comments category-icon mb-3 feature-icon"></i>
+                            <h5 class="card-title feature-title">Direct Communication</h5>
+                            <p class="card-text feature-text">Chat with sellers directly</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-heart category-icon mb-3 feature-icon"></i>
+                            <h5 class="card-title feature-title">Wishlist</h5>
+                            <p class="card-text feature-text">Save favorite services for future reference</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5 cta-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <h2 class="fw-bold mb-4 text-white">Ready to Plan Your Perfect Event?</h2>
+                    <p class="mb-4 text-white">Join thousands of happy couples and event planners who trust SRIDA</p>
+                    <a href="register.html" class="btn btn-primary btn-lg px-5 get-started-btn">Get Started Today</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-ring"></i> SRIDA</h5>
+                    <p>Smart Event Management Platform - Making wedding and event planning effortless</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <h6>Connect with us</h6>
+                    <div class="mb-3">
+                        <i class="fab fa-github fa-lg me-3"></i>
+                        <i class="fab fa-linkedin fa-lg me-3"></i>
+                        <i class="fab fa-twitter fa-lg"></i>
+                    </div>
+                    <small>&copy; 2024 SRIDA. All rights reserved.</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"></script>
+    <script>
+        // GSAP Animations for Landing Page with Full Implementation
+        document.addEventListener('DOMContentLoaded', function() {
+            const tl = gsap.timeline();
+
+            // Hero Section Staggered Animation
+            tl.from('.hero-title', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out'
+            })
+            .from('.hero-subtitle', {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+            }, '-=0.5')
+            .from('.hero-buttons .col-md-3', {
+                y: 30,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: 'power3.out'
+            }, '-=0.3');
+
+            // Features Section Animation with Scroll Trigger
+            const featuresObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        gsap.fromTo('.feature-card',
+                            {
+                                y: 60,
+                                opacity: 0,
+                                scale: 0.9
+                            },
+                            {
+                                y: 0,
+                                opacity: 1,
+                                scale: 1,
+                                duration: 0.8,
+                                stagger: 0.15,
+                                ease: 'power3.out'
+                            }
+                        );
+                        gsap.fromTo('.section-title',
+                            {
+                                y: 40,
+                                opacity: 0
+                            },
+                            {
+                                y: 0,
+                                opacity: 1,
+                                duration: 0.8,
+                                ease: 'power3.out'
+                            },
+                            '-=0.5'
+                        );
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            if (document.querySelector('.features-section')) {
+                featuresObserver.observe(document.querySelector('.features-section'));
+            }
+
+            // Call to Action Section Animation
+            const ctaObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        gsap.fromTo('.cta-section h2, .cta-section p, .get-started-btn',
+                            {
+                                y: 50,
+                                opacity: 0
+                            },
+                            {
+                                y: 0,
+                                opacity: 1,
+                                duration: 1,
+                                stagger: 0.2,
+                                ease: 'power3.out'
+                            }
+                        );
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            if (document.querySelector('.cta-section')) {
+                ctaObserver.observe(document.querySelector('.cta-section'));
+            }
+
+            // Interactive Hover Effects for Feature Cards
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    gsap.to(this, {
+                        y: -15,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                    gsap.to(this.querySelector('.feature-icon'), {
+                        rotation: 5,
+                        scale: 1.1,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    gsap.to(this, {
+                        y: 0,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                    gsap.to(this.querySelector('.feature-icon'), {
+                        rotation: 0,
+                        scale: 1,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                });
+            });
+
+            // Smooth Scroll Navigation
+            document.querySelectorAll('[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        gsap.to(window, {
+                            duration: 1.2,
+                            scrollTo: target.offsetTop - 80,
+                            ease: 'power2.inOut'
+                        });
+                    }
+                });
+            });
+
+            // Navbar Animation on Scroll
+            let lastScrollTop = 0;
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                window.addEventListener('scroll', function() {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                    if (scrollTop > lastScrollTop && scrollTop > 100) {
+                        // Scrolling down - hide navbar
+                        gsap.to(navbar, {
+                            y: -100,
+                            duration: 0.3,
+                            ease: 'power2.out'
+                        });
+                    } else {
+                        // Scrolling up - show navbar
+                        gsap.to(navbar, {
+                            y: 0,
+                            duration: 0.3,
+                            ease: 'power2.out'
+                        });
+                    }
+
+                    // Change navbar appearance based on scroll position
+                    if (scrollTop > 200) {
+                        navbar.classList.add('navbar-scrolled');
+                        gsap.to(navbar, {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            backdropFilter: 'blur(10px)',
+                            duration: 0.3
+                        });
+                    } else {
+                        navbar.classList.remove('navbar-scrolled');
+                        gsap.to(navbar, {
+                            backgroundColor: 'transparent',
+                            duration: 0.3
+                        });
+                    }
+
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                });
+            }
+        });
+
+        // Particle Background Animation
+        function createParticles() {
+            if (!document.body) return;
+
+            const particlesContainer = document.createElement('div');
+            particlesContainer.style.position = 'fixed';
+            particlesContainer.style.top = '0';
+            particlesContainer.style.left = '0';
+            particlesContainer.style.width = '100%';
+            particlesContainer.style.height = '100%';
+            particlesContainer.style.pointerEvents = 'none';
+            particlesContainer.style.zIndex = '-1';
+            document.body.appendChild(particlesContainer);
+
+            for (let i = 0; i < 30; i++) { // Reduced count for better performance
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = 'rgba(255, 255, 255, 0.1)';
+                particle.style.borderRadius = '50%';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+
+                particlesContainer.appendChild(particle);
+
+                // Animate particles with better performance
+                gsap.to(particle, {
+                    duration: Math.random() * 8 + 8,
+                    x: Math.random() * 150 - 75,
+                    y: Math.random() * 150 - 75,
+                    opacity: Math.random() * 0.3 + 0.2,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'power1.inOut'
+                });
+            }
+        }
+
+        // Initialize when page loads with error handling
+        window.addEventListener('load', function() {
+            console.log('SRIDA page loaded successfully!');
+
+            // Delay particle creation for better performance
+            setTimeout(createParticles, 1500);
+
+            // Add subtle text animations to key headings
+            gsap.to('.feature-title, .section-title', {
+                duration: 3,
+                ease: 'none',
+                repeat: -1,
+                yoyo: true,
+                textShadow: '0 0 8px rgba(102, 126, 234, 0.3)'
+            });
+        });
+
+        // Button pulse animation
+        gsap.to('.get-started-btn', {
+            duration: 2.5,
+            scale: 1.03,
+            ease: 'power2.inOut',
+            repeat: -1,
+            yoyo: true
+        });
+    </script>
+</body>
+</html>

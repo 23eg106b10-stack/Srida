@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard - SRIDA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .dashboard-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .stat-card.success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .stat-card.warning { background: linear-gradient(135deg, #fcb045 0%, #fd1d1d 100%); }
+        .stat-card.info { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .quick-action-card { cursor: pointer; transition: transform 0.2s; }
+        .quick-action-card:hover { transform: translateY(-3px); }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; }
+        .status-badge { font-size: 0.8em; padding: 4px 8px; border-radius: 20px; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #d1ecf1; color: #0c5460; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">
+                <i class="fas fa-ring me-2"></i>SRIDA
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" href="buyer-dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Browse Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="my-bookings.html">My Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="messages.html">Messages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="wishlist.html">Wishlist</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-2"></i><span id="userName">John Doe</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="fw-bold mb-3">Buyer Dashboard</h1>
+                <p class="text-muted">Manage your event planning activities</p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card stat-card dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-check fa-2x mb-2"></i>
+                        <h4 id="totalBookings">0</h4>
+                        <small>Total Bookings</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card stat-card success dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h4 id="activeBookings">0</h4>
+                        <small>Active Events</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card stat-card warning dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock fa-2x mb-2"></i>
+                        <h4 id="pendingBookings">0</h4>
+                        <small>Pending</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card stat-card info dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-heart fa-2x mb-2"></i>
+                        <h4 id="wishlistItems">0</h4>
+                        <small>Wishlist Items</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card dashboard-card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <div class="card quick-action-card dashboard-card text-center p-3" onclick="window.location.href='services.html'">
+                                    <i class="fas fa-search fa-2x text-primary mb-3"></i>
+                                    <h6 class="mb-0">Browse Services</h6>
+                                    <small class="text-muted">Find event vendors</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card quick-action-card dashboard-card text-center p-3" onclick="window.location.href='my-bookings.html'">
+                                    <i class="fas fa-calendar-alt fa-2x text-success mb-3"></i>
+                                    <h6 class="mb-0">View Bookings</h6>
+                                    <small class="text-muted">Manage your events</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card quick-action-card dashboard-card text-center p-3" onclick="window.location.href='messages.html'">
+                                    <i class="fas fa-envelope fa-2x text-info mb-3"></i>
+                                    <h6 class="mb-0">Messages</h6>
+                                    <small class="text-muted">Contact sellers</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card quick-action-card dashboard-card text-center p-3" onclick="window.location.href='wishlist.html'">
+                                    <i class="fas fa-heart fa-2x text-danger mb-3"></i>
+                                    <h6 class="mb-0">My Wishlist</h6>
+                                    <small class="text-muted">Saved services</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card dashboard-card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="recentActivity" class="list-group">
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Welcome to SRIDA!</h6>
+                                    <small class="text-muted">Just now</small>
+                                </div>
+                                <p class="mb-1">Start by browsing our services or checking your bookings.</p>
+                                <small class="text-muted">Get started with event planning</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API configuration
+        const API_BASE = 'http://localhost:5000/api';
+        let currentUser = null;
+        let userToken = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            userToken = localStorage.getItem('srida_token');
+            currentUser = JSON.parse(localStorage.getItem('srida_user'));
+
+            if (!userToken || !currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = currentUser.name;
+            loadDashboardStats();
+        });
+
+        // API calls with authentication
+        async function apiCall(endpoint, options = {}) {
+            const headers = {
+                'Authorization': `Bearer ${userToken}`,
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+            return fetch(`${API_BASE}${endpoint}`, { ...options, headers });
+        }
+
+        // Dashboard functions
+        async function loadDashboardStats() {
+            try {
+                // Load bookings stats
+                const bookingsResponse = await apiCall('/bookings/buyer');
+                const bookingsData = await bookingsResponse.json();
+                const bookings = bookingsData.data || [];
+
+                // Load wishlist stats
+                const wishlistResponse = await apiCall('/wishlist');
+                const wishlistData = await wishlistResponse.json();
+                const wishlistCount = wishlistData.data ? wishlistData.data.count : 0;
+
+                // Update stats
+                document.getElementById('totalBookings').textContent = bookings.length;
+                document.getElementById('activeBookings').textContent = bookings.filter(b => b.status === 'confirmed' || b.status === 'in-progress').length;
+                document.getElementById('pendingBookings').textContent = bookings.filter(b => b.status === 'pending').length;
+                document.getElementById('wishlistItems').textContent = wishlistCount;
+
+                // Update recent activity
+                updateRecentActivity(bookings);
+
+            } catch (error) {
+                console.error('Dashboard error:', error);
+                document.getElementById('recentActivity').innerHTML = '<div class="list-group-item text-center">Unable to load data. Please check your connection.</div>';
+            }
+        }
+
+        function updateRecentActivity(bookings) {
+            const container = document.getElementById('recentActivity');
+            if (bookings.length === 0) {
+                return;
+            }
+
+            container.innerHTML = '';
+
+            // Add recent bookings
+            bookings.slice(0, 3).forEach(booking => {
+                const statusClass = `status-${booking.status}`;
+                const eventDate = new Date(booking.eventDate).toLocaleDateString();
+                container.innerHTML += `
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Booking: ${booking.service.serviceName}</h6>
+                            <small><span class="status-badge ${statusClass}">${booking.status}</span></small>
+                        </div>
+                        <p class="mb-1">${booking.eventType} - ${eventDate}</p>
+                        <small class="text-muted">With ${booking.seller.businessName || booking.seller.name}</small>
+                    </div>
+                `;
+            });
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('srida_token');
+            localStorage.removeItem('srida_user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

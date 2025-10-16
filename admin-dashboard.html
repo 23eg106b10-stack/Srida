@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SRIDA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .sidebar { background: white; min-height: 100vh; box-shadow: 2px 0 4px rgba(0,0,0,0.1); }
+        .main-content { padding: 2rem; }
+        .dashboard-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .stat-card { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); color: white; }
+        .stat-card.success { background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); }
+        .stat-card.warning { background: linear-gradient(135deg, #e17055 0%, #d63031 100%); }
+        .stat-card.info { background: linear-gradient(135deg, #636e72 0%, #2d3436 100%); }
+        .table-responsive { border-radius: 12px; overflow: hidden; }
+        .btn-admin { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); border: none; }
+        .status-badge { font-size: 0.8em; padding: 4px 8px; border-radius: 20px; }
+        .status-active { background: #d4edda; color: #155724; }
+        .status-inactive { background: #f8d7da; color: #721c24; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #e9ecef; display: flex; align-items: center; justify-content: center; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-danger" href="#">
+                <i class="fas fa-cog me-2"></i>Admin Panel
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" href="admin-dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('users')">Users</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('services')">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('bookings')">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+                <div class="navbar-nav">
+                    <span class="nav-link"><i class="fas fa-user-shield me-2"></i>Admin</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 sidebar p-3">
+                <div class="text-center mb-4">
+                    <i class="fas fa-cog fa-3x text-danger mb-3"></i>
+                    <h5>Administration</h5>
+                    <p class="text-muted">Platform Management</p>
+                </div>
+                <nav class="nav flex-column">
+                    <button class="nav-link active mb-2 w-100 text-start" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard Overview
+                    </button>
+                    <button class="nav-link mb-2 w-100 text-start" onclick="showSection('users')">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </button>
+                    <button class="nav-link mb-2 w-100 text-start" onclick="showSection('services')">
+                        <i class="fas fa-cogs me-2"></i>Manage Services
+                    </button>
+                    <button class="nav-link mb-2 w-100 text-start" onclick="showSection('bookings')">
+                        <i class="fas fa-calendar-check me-2"></i>View Bookings
+                    </button>
+                    <button class="nav-link mb-2 w-100 text-start" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-line me-2"></i>Analytics
+                    </button>
+                    <button class="nav-link mb-2 w-100 text-start" onclick="showSection('settings')">
+                        <i class="fas fa-cogs me-2"></i>System Settings
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 main-content">
+                <!-- Dashboard Overview -->
+                <div id="dashboardSection" class="section active">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="fw-bold">Admin Dashboard</h1>
+                        <button class="btn btn-admin" onclick="loadDashboardData()">
+                            <i class="fas fa-sync me-2"></i>Refresh Stats
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card dashboard-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-users fa-2x mb-2"></i>
+                                    <h4 id="totalUsers">0</h4>
+                                    <small>Total Users</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card success dashboard-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-shopping-bag fa-2x mb-2"></i>
+                                    <h4 id="totalBuyers">0</h4>
+                                    <small>Buyers</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card warning dashboard-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-store fa-2x mb-2"></i>
+                                    <h4 id="totalSellers">0</h4>
+                                    <small>Sellers</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card info dashboard-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-concierge-bell fa-2x mb-2"></i>
+                                    <h4 id="totalServices">0</h4>
+                                    <small>Services</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card dashboard-card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="fas fa-calendar-plus me-2"></i>Total Bookings: <span id="totalBookings">0</span></h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <h5 class="text-primary" id="confirmedBookings">0</h5>
+                                            <small>Confirmed</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <h5 class="text-warning" id="pendingBookings">0</h5>
+                                            <small>Pending</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card dashboard-card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Activity</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="recentActivity" class="text-muted">
+                                        Loading recent activity...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Management Section -->
+                <div id="usersSection" class="section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Manage Users</h2>
+                        <select id="userRoleFilter" class="form-select w-auto">
+                            <option value="">All Roles</option>
+                            <option value="buyer">Buyers</option>
+                            <option value="seller">Sellers</option>
+                        </select>
+                    </div>
+
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <div id="usersTableContainer" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Role</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Status</th>
+                                            <th>Joined</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <tr><td colspan="7" class="text-center">Loading users...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <nav id="usersPagination" class="d-none mt-4">
+                                <ul class="pagination justify-content-center">
+                                    <!-- Pagination buttons will be added here -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Management Section -->
+                <div id="servicesSection" class="section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Manage Services</h2>
+                        <select id="serviceCategoryFilter" class="form-select w-auto">
+                            <option value="">All Categories</option>
+                            <option value="Flowers">Flowers</option>
+                            <option value="Décor">Décor</option>
+                            <option value="Priest Services">Priest Services</option>
+                            <option value="Music/Band">Music/Band</option>
+                            <option value="Tent & Furniture">Tent & Furniture</option>
+                            <option value="Chairs & Basic Necessities">Chairs & Necessities</option>
+                        </select>
+                    </div>
+
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <div id="servicesTableContainer" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Category</th>
+                                            <th>Seller</th>
+                                            <th>Price</th>
+                                            <th>Location</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="servicesTableBody">
+                                        <tr><td colspan="7" class="text-center">Loading services...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bookings Management Section -->
+                <div id="bookingsSection" class="section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>All Bookings</h2>
+                        <select id="bookingStatusFilter" class="form-select w-auto">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <div id="bookingsTableContainer" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Buyer</th>
+                                            <th>Seller</th>
+                                            <th>Amount</th>
+                                            <th>Event Date</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bookingsTableBody">
+                                        <tr><td colspan="7" class="text-center">Loading bookings...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div id="analyticsSection" class="section">
+                    <h2>Platform Analytics</h2>
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card dashboard-card">
+                                <div class="card-body text-center">
+                                    <small>Revenue This Month</small>
+                                    <h4 class="text-success" id="monthlyRevenue">₹0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card dashboard-card">
+                                <div class="card-body text-center">
+                                    <small>Average Booking Value</small>
+                                    <h4 class="text-info" id="avgBookingValue">₹0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card dashboard-card">
+                                <div class="card-body text-center">
+                                    <small>Conversion Rate</small>
+                                    <h4 class="text-warning" id="conversionRate">0%</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card dashboard-card">
+                                <div class="card-body text-center">
+                                    <small>Most Popular Category</small>
+                                    <h6 id="popularCategory">N/A</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card dashboard-card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Monthly Revenue Trend</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="revenueChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card dashboard-card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Service Category Distribution</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="categoryChart" width="300" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card dashboard-card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Top Performing Services</h6>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="exportAnalytics()">
+                                        <i class="fas fa-download me-1"></i>Export Report
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="topServicesTable">
+                                        <div class="text-center">Loading top services...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settingsSection" class="section">
+                    <h2>System Settings</h2>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card dashboard-card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Platform Configuration</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form id="platformSettingsForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Platform Name</label>
+                                            <input type="text" class="form-control" id="platformName" value="SRIDA Event Management">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Currency</label>
+                                            <select class="form-control" id="currency">
+                                                <option value="INR">Indian Rupee (₹)</option>
+                                                <option value="USD">US Dollar ($)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Platform Fee (%)</label>
+                                            <input type="number" class="form-control" id="platformFee" min="0" max="20" value="5">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Booking Confirmation Mode</label>
+                                            <select class="form-control" id="bookingMode">
+                                                <option value="auto">Automatic (Instant)</option>
+                                                <option value="manual">Manual Review</option>
+                                            </select>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card dashboard-card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">System Maintenance</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <h6 class="mb-3">Database Operations</h6>
+                                        <button class="btn btn-warning btn-sm me-2" onclick="backupDatabase()">
+                                            <i class="fas fa-database me-1"></i>Backup Database
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="clearCache()">
+                                            <i class="fas fa-trash me-1"></i>Clear Cache
+                                        </button>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h6 class="mb-3">System Status</h6>
+                                        <div class="status-indicator">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-muted">Server Status</span>
+                                                <span class="text-success">● Online</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-muted">Database Status</span>
+                                                <span class="text-success">● Connected</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-muted">Email Service</span>
+                                                <span class="text-warning">● Maintenance</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h6 class="mb-3">Emergency Controls</h6>
+                                        <button class="btn btn-danger btn-sm me-2" onclick="emergencyStop()">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>Emergency Stop
+                                        </button>
+                                        <button class="btn btn-info btn-sm" onclick="systemHealthCheck()">
+                                            <i class="fas fa-stethoscope me-1"></i>Health Check
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card dashboard-card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">System Logs</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="log-container" id="systemLogs" style="max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; background: #f8f9fa; padding: 10px; border-radius: 5px;">
+                                        <div class="log-entry text-muted">Loading system logs...</div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="refreshLogs()">
+                                            <i class="fas fa-sync me-1"></i>Refresh Logs
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-sm" onclick="downloadLogs()">
+                                            <i class="fas fa-download me-1"></i>Download Full Log
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- User Edit Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit User Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">User: <strong id="modalUserName"></strong></label>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="verifiedStatus">
+                        <label class="form-check-label" for="verifiedStatus">Verified User</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteUserConfirm()">Delete User</button>
+                    <button type="button" class="btn btn-primary" onclick="updateUserStatus()">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // API configuration
+        const API_BASE = 'http://localhost:5000/api';
+        let currentUser = null;
+        let userToken = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            userToken = localStorage.getItem('srida_token');
+            currentUser = JSON.parse(localStorage.getItem('srida_user'));
+
+            if (!userToken || !currentUser || currentUser.role !== 'admin') {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            showSection('dashboard');
+            loadDashboardData();
+        });
+
+        // Section navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId + 'Section').classList.add('active');
+
+            // Load data based on section
+            switch(sectionId) {
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'services':
+                    loadAdminServices();
+                    break;
+                case 'bookings':
+                    loadAdminBookings();
+                    break;
+            }
+        }
+
+        // API calls with authentication
+        async function apiCall(endpoint, options = {}) {
+            const headers = {
+                'Authorization': `Bearer ${userToken}`,
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+            return fetch(`${API_BASE}${endpoint}`, { ...options, headers });
+        }
+
+        // Dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await apiCall('/admin/dashboard');
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('totalUsers').textContent = data.stats.totalUsers;
+                    document.getElementById('totalBuyers').textContent = data.stats.totalBuyers;
+                    document.getElementById('totalSellers').textContent = data.stats.totalSellers;
+                    document.getElementById('totalServices').textContent = data.stats.totalServices;
+                    document.getElementById('totalBookings').textContent = data.stats.totalBookings;
+                    document.getElementById('confirmedBookings').textContent = data.stats.totalBookings - data.stats.pendingBookings;
+                    document.getElementById('pendingBookings').textContent = data.stats.pendingBookings;
+
+                    // Show recent activity
+                    updateRecentActivity(data.recentData);
+                }
+            } catch (error) {
+                console.error('Dashboard error:', error);
+            }
+        }
+
+        function updateRecentActivity(recentData) {
+            const container = document.getElementById('recentActivity');
+            container.innerHTML = '';
+
+            if (recentData.users.length > 0) {
+                container.innerHTML += '<h6>Recent Users:</h6>';
+                recentData.users.slice(0, 3).forEach(user => {
+                    container.innerHTML += `
+                        <div class="mb-2">
+                            <small><strong>${user.name}</strong> registered as ${user.role} on ${new Date(user.createdAt).toLocaleDateString()}</small>
+                        </div>
+                    `;
+                });
+            }
+
+            if (recentData.bookings.length > 0) {
+                container.innerHTML += '<h6 class="mt-3">Recent Bookings:</h6>';
+                recentData.bookings.slice(0, 3).forEach(booking => {
+                    container.innerHTML += `
+                        <div class="mb-2">
+                            <small><strong>${booking.service.serviceName}</strong> - ${booking.buyer.name}</small>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // Users management
+        async function loadUsers() {
+            try {
+                const response = await apiCall('/admin/users');
+                const data = await response.json();
+
+                if (data.success) {
+                    displayUsers(data.users);
+                }
+            } catch (error) {
+                console.error('Users error:', error);
+                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error loading users</td></tr>';
+            }
+        }
+
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar me-2">${user.name.charAt(0)}</div>
+                            <div>
+                                <strong>${user.name}</strong>
+                                ${user.businessName ? `<br><small class="text-muted">${user.businessName}</small>` : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge bg-primary">${user.role}</span></td>
+                    <td>${user.email}</td>
+                    <td>${user.phone || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge ${user.verified ? 'status-active' : 'status-inactive'}">
+                            ${user.verified ? 'Verified' : 'Unverified'}
+                        </span>
+                    </td>
+                    <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-2" onclick="editUser('${user._id}', '${user.name}', ${user.verified})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user._id}', '${user.name}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Services management (admin view)
+        async function loadAdminServices() {
+            try {
+                const response = await apiCall('/admin/services');
+                const data = await response.json();
+
+                if (data.success) {
+                    displayAdminServices(data.services);
+                }
+            } catch (error) {
+                console.error('Services error:', error);
+                document.getElementById('servicesTableBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error loading services</td></tr>';
+            }
+        }
+
+        function displayAdminServices(services) {
+            const tbody = document.getElementById('servicesTableBody');
+            tbody.innerHTML = services.map(service => `
+                <tr>
+                    <td>${service.serviceName}</td>
+                    <td><span class="badge bg-info">${service.category}</span></td>
+                    <td>${service.seller.name}<br><small class="text-muted">${service.seller.email}</small></td>
+                    <td>₹${service.pricing.basePrice}</td>
+                    <td>${service.location.city}</td>
+                    <td>${service.availability ? 'Active' : 'Inactive'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteService('${service._id}', '${service.serviceName}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Bookings management (admin view)
+        async function loadAdminBookings() {
+            try {
+                const response = await apiCall('/admin/bookings');
+                const data = await response.json();
+
+                if (data.success) {
+                    displayAdminBookings(data.bookings);
+                }
+            } catch (error) {
+                console.error('Bookings error:', error);
+                document.getElementById('bookingsTableBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error loading bookings</td></tr>';
+            }
+        }
+
+        function displayAdminBookings(bookings) {
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = bookings.map(booking => `
+                <tr>
+                    <td>${booking.service.serviceName}</td>
+                    <td>${booking.buyer.name}<br><small class="text-muted">${booking.buyer.email}</small></td>
+                    <td>${booking.seller.name}<br><small class="text-muted">${booking.seller.email}</small></td>
+                    <td>₹${booking.totalAmount}</td>
+                    <td>${new Date(booking.eventDate).toLocaleDateString()}</td>
+                    <td><span class="status-badge">${booking.status}</span></td>
+                    <td>${new Date(booking.createdAt).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        // User management functions
+        let currentUserId = null;
+        function editUser(id, name, verified) {
+            currentUserId = id;
+            document.getElementById('modalUserName').textContent = name;
+            document.getElementById('verifiedStatus').checked = verified;
+            new bootstrap.Modal(document.getElementById('userModal')).show();
+        }
+
+        async function updateUserStatus() {
+            try {
+                const verified = document.getElementById('verifiedStatus').checked;
+                const response = await apiCall(`/admin/users/${currentUserId}/status`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ verified })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+                    loadUsers();
+                    alert('User status updated successfully');
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Error updating user status');
+            }
+        }
+
+        function deleteUser(id, name) {
+            if (confirm(`Are you sure you want to delete user "${name}"? This action cannot be undone.`)) {
+                deleteUserConfirm(id);
+            }
+        }
+
+        async function deleteUserConfirm(id) {
+            try {
+                const response = await apiCall(`/admin/users/${id}`, { method: 'DELETE' });
+                const data = await response.json();
+                if (data.success) {
+                    loadUsers();
+                    alert('User deleted successfully');
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Error deleting user');
+            }
+        }
+
+        // Service management functions
+        function deleteService(id, name) {
+            if (confirm(`Are you sure you want to delete service "${name}"? This action cannot be undone.`)) {
+                deleteServiceConfirm(id);
+            }
+        }
+
+        async function deleteServiceConfirm(id) {
+            try {
+                const response = await apiCall(`/admin/services/${id}`, { method: 'DELETE' });
+                const data = await response.json();
+                if (data.success) {
+                    loadAdminServices();
+                    alert('Service deleted successfully');
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Error deleting service');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('srida_token');
+            localStorage.removeItem('srida_user');
+            window.location.href = 'index.html';
+        }
+
+        // Filter event listeners
+        document.getElementById('userRoleFilter')?.addEventListener('change', function() {
+            loadUsersWithFilter(this.value);
+        });
+
+        async function loadUsersWithFilter(role) {
+            const response = await apiCall(`/admin/users?role=${role}`);
+            const data = await response.json();
+            if (data.success) {
+                displayUsers(data.users);
+            }
+        }
+    </script>
+</body>
+</html>
