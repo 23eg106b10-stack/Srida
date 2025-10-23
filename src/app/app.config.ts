@@ -5,7 +5,7 @@ export const SRIDA_CONFIG = {
   name: 'SRIDA Frontend',
   version: '1.0.0',
   api: {
-    baseUrl: 'http://localhost:5000/api',
+    baseUrl: 'https://team-project-25x2.onrender.com',
     endpoints: {
       auth: {
         register: '/auth/register',
@@ -63,3 +63,4 @@ export const SRIDA_CONFIG = {
     }
   }
 };
+
